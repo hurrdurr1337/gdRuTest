@@ -30,16 +30,16 @@ public abstract class Merchant : MonoBehaviour
 
     protected bool isLastOpponentDealFair = true;
     protected int numberOfDeals = 0;
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         this.Name = new NameGenerator().Name;
         gameObject.name = this.Name;
     }
 
-    public void CheckDeal(int moneyAmount, bool isFair = false)
+    public void CheckDeal(int moneyAmount, bool isOpponentFair = false)
     {
         currentMoney += moneyAmount;
-        isLastOpponentDealFair = isFair;
+        isLastOpponentDealFair = isOpponentFair;
         numberOfDeals++;
     }
     public abstract bool DoDeal();

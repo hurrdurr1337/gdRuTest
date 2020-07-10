@@ -12,7 +12,7 @@ public class MerchantGuild : MonoBehaviour
     public GameObject merchantPrefab;
 
 
-    public Merchant[] merchants;
+    public Merchant[] merchants { get; private set; }
 
 
 
@@ -30,10 +30,11 @@ public class MerchantGuild : MonoBehaviour
         {
             merchants[i] = CreateNewMerchant((MerchantTypes)(i % merchantTypesCount));
         }
+        Scoreboard.instance.UpdateUI(merchants);
     }
 
 
-    void StartTraiding()
+    public void StartTraiding()
     {
 
         for (int i = 0; i < merchants.Length; i++)
@@ -51,6 +52,8 @@ public class MerchantGuild : MonoBehaviour
         {
             merchants[i].transform.SetSiblingIndex(i);
         }
+        Scoreboard.instance.UpdateUI(merchants);
+
     }
 
     void Trade(Merchant merchantOne, Merchant merchantTwo)
@@ -77,11 +80,11 @@ public class MerchantGuild : MonoBehaviour
                 if (resultOfDealOne)
                 {
                     merchantOne.CheckDeal(1);
-                    merchantTwo.CheckDeal(5);
+                    merchantTwo.CheckDeal(5, true);
                 }
                 else
                 {
-                    merchantOne.CheckDeal(5);
+                    merchantOne.CheckDeal(5, true);
                     merchantTwo.CheckDeal(1);
                 }
             }
@@ -92,7 +95,7 @@ public class MerchantGuild : MonoBehaviour
         bool result = UnityEngine.Random.value > 0.95f ? !initalBool : initalBool;
         return result;
     }
-    void EndOfTheYear()
+    public void EndOfTheYear()
     {
         int badMerchantsCount = Mathf.RoundToInt(maxMerchants * (exclusionPercentage / 100f));
         int j = 0;
@@ -101,10 +104,13 @@ public class MerchantGuild : MonoBehaviour
             Destroy(merchants[i].gameObject);
             merchants[i] = CreateNewMerchant((merchants[j++].MerchantType));
         }
-        foreach (var merchant in merchants)
+        for (int i = 0; i < merchants.Length; i++)
         {
-            merchant.ReInitMerchant();
+            merchants[i].ReInitMerchant();
         }
+        Scoreboard.instance.UpdateUI(merchants);
+
+
     }
 
     //argument can be set as int
